@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Smart Duplicate Cleaner Pro | Reclaim Your Windows Storage</title>
+    <!-- Tailwind CSS with Forms and Container Queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Premium Libraries -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+    <style>
+        .glass-panel {
+            background: rgba(25, 28, 32, 0.55);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .glow-border {
+            position: relative;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .glow-border:hover {
+            border-color: #00e0ff;
+            box-shadow: 0 0 25px rgba(0, 224, 255, 0.12);
+        }
+
+        .subtle-grid {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(17, 19, 23, 0) 0%, rgba(17, 19, 23, 1) 100%);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #111317;
+            color: #e2e2e8;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111317;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e2024;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00daf8;
+        }
+
+        /* Animated cursor spotlight background for bento grids */
+        .spotlight-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 224, 255, 0.06), transparent 40%);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
+
+        .spotlight-card>* {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-primary-container": "#00363f",
+                        "secondary": "#d1bcff",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#111317",
+                        "secondary-fixed-dim": "#d1bcff",
+                        "primary-container": "#00daf8",
+                        "on-surface-variant": "#bac9cd",
+                        "surface-container": "#1e2024",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "tertiary-fixed": "#47ffb8",
+                        "secondary-fixed": "#e9ddff",
+                        "outline": "#859397",
+                        "on-tertiary-container": "#006343",
+                        "inverse-surface": "#e2e2e8",
+                        "on-tertiary": "#003824",
+                        "surface-variant": "#333539",
+                        "tertiary": "#87ffc6",
+                        "surface-container-highest": "#333539",
+                        "outline-variant": "#3b494c",
+                        "on-secondary-container": "#ddcdff",
+                        "on-primary-fixed-variant": "#004e5a",
+                        "primary": "#baf2ff",
+                        "on-surface": "#e2e2e8",
+                        "surface-container-low": "#1a1c20",
+                        "tertiary-fixed-dim": "#00e29d",
+                        "background": "#111317",
+                        "error-container": "#93000a",
+                        "surface-container-lowest": "#0c0e12",
+                        "on-primary-fixed": "#001f25",
+                        "surface-container-high": "#282a2e",
+                        "tertiary-container": "#00e8a2",
+                        "on-background": "#e2e2e8",
+                        "secondary-container": "#7000ff",
+                        "surface-dim": "#111317",
+                        "surface-tint": "#00daf8",
+                        "inverse-primary": "#006877",
+                        "on-secondary-fixed": "#23005b",
+                        "on-secondary": "#3c0090",
+                        "on-tertiary-fixed": "#002113",
+                        "on-primary": "#00363f",
+                        "inverse-on-surface": "#2f3035",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#5700c9",
+                        "primary-fixed-dim": "#00daf8",
+                        "primary-fixed": "#a5eeff",
+                        "surface-bright": "#37393e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "4px",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin": "24px",
+                        "gutter": "16px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["10px", { "lineHeight": "1.2", "letterSpacing": "0.08em", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="subtle-grid selection:bg-primary-container selection:text-on-primary-container">
+
+    <!-- Scroll Progress Bar -->
+    <div class="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-primary-container to-secondary z-[60] w-0 transition-all duration-100 ease-out"
+        id="scroll-bar"></div>
+
+    <!-- Custom Toast Notification -->
+    <div class="fixed bottom-6 right-6 z-[60] transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 ease-out"
+        id="toast">
+        <div
+            class="glass-panel border-primary-container/30 px-6 py-4 rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.4)] flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary-container animate-pulse">download</span>
+            <div>
+                <div class="font-bold text-sm text-on-surface">Initializing Download</div>
+                <div class="text-xs text-on-surface-variant" id="toast-message">Fetching installation package from
+                    repository...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TopNavBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-surface/75 backdrop-blur-xl border-b border-white/5 transition-all duration-300"
+        id="header-nav">
+        <div class="flex justify-between items-center h-16 px-margin max-w-container-max mx-auto">
+            <div
+                class="font-headline-md text-headline-md font-bold text-primary tracking-tight flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[28px] animate-pulse">delete_sweep</span>
+                Smart Duplicate Cleaner <span
+                    class="text-white font-light text-xs bg-white/5 px-2 py-0.5 rounded border border-white/10 ml-1">PRO</span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all hover:after:w-full"
+                    href="#video-action">DEMO</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all hover:after:w-full"
+                    href="#features">Features</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all hover:after:w-full"
+                    href="#faq">FAQ</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all hover:after:w-full"
+                    href="#pricing">PRICING</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <a class="github-download-btn bg-primary-container text-on-primary-container px-6 py-2.5 rounded-lg font-label-md text-label-md font-bold transition-all hover:opacity-90 active:scale-95 duration-100 ease-in-out flex items-center gap-2"
+                    href="#">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    Download <span class="git-ver font-bold opacity-85">v1.0.0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+            <!-- Interactive Particle Canvas -->
+            <canvas class="absolute inset-0 z-0 opacity-40 pointer-events-none" id="hero-particles"></canvas>
+
+            <div class="absolute inset-0 z-0">
+                <!-- Background Image -->
+                <img alt="Windows Workspace Setup" class="w-full h-full object-cover opacity-25 filter brightness-50"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtkU-OLI7_fPoYEus9Ma956D2uICNPYhGeE_qtRD2SSnGJJGvjz81ASpermxJAAbwGZX93RHnaAXHtJWqP6LmHX88wmU8IfhSnBn4k1psrwqPNC6vN3s02Jky96eEoSFpHurBIX5ofbslqarwAkWMlqI_DoqoIZZAHcbKaAIXxCQu8q68tO9WJGMrVzqX3QcEdoodmNVjMrXcwC3syBOhw2qttYxyg6Xd3Elkwdm3e5SNFriKNI2lt6sjcYx81Gbom950ybXZ-8kyY" />
+                <div class="absolute inset-0 hero-gradient"></div>
+            </div>
+
+            <div class="relative z-10 max-w-container-max mx-auto px-margin text-center py-12">
+                <!-- Smooth fade-in wrapper -->
+                <div class="hero-content opacity-0">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-container/10 border border-primary/20 mb-8"
+                        id="version-badge">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-container"></span>
+                        </span>
+                        <span class="font-label-sm text-label-sm text-primary uppercase tracking-widest"
+                            id="ver-badge-text">v1.0.0 Live Now</span>
+                    </div>
+
+                    <h1
+                        class="font-display-lg text-display-lg md:text-[64px] mb-6 text-on-surface max-w-4xl mx-auto leading-none tracking-tight">
+                        Reclaim Your Drive Space.<br>
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-primary-container to-secondary">Smarter
+                            &amp; Safer.</span>
+                    </h1>
+
+                    <p
+                        class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10 text-lg opacity-90">
+                        Find and safely eliminate identical files across directories using optimized comparison
+                        algorithms. Designed natively for Windows 10 &amp; 11 with a fast, modern desktop control board.
+                    </p>
+
+                    <div
+                        class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto sm:max-w-none">
+                        <a class="github-download-btn w-full sm:w-auto bg-primary-container text-on-primary-container px-10 py-5 rounded-lg font-headline-md text-headline-md font-bold transition-all hover:scale-105 active:scale-95 shadow-[0_0_35px_rgba(0,224,255,0.25)] flex items-center justify-center gap-3"
+                            href="#">
+                            <span class="material-symbols-outlined text-[24px]">download</span>
+                            <span>Free Download</span>
+                        </a>
+                        <button
+                            class="buy-license-btn w-full sm:w-auto glass-panel text-on-surface px-10 py-5 rounded-lg font-headline-md text-headline-md font-bold transition-all hover:bg-white/5 active:scale-95 border border-white/10 hover:border-white/20 flex items-center justify-center gap-3">
+                            <span class="material-symbols-outlined text-[24px]">chat</span>
+                            <span>Get PRO via WhatsApp - $20</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-16 flex flex-col md:flex-row items-center justify-center gap-6 opacity-60">
+                        <span class="font-label-sm text-label-sm tracking-wider">ENGINEERED EXCLUSIVELY FOR
+                            WINDOWS</span>
+                        <div class="flex gap-4 items-center justify-center text-primary-container">
+                            <span class="material-symbols-outlined text-[28px]">desktop_windows</span>
+                            <span class="font-label-sm text-[12px] font-bold">WINDOWS 10 / 11 COMPATIBLE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- YouTube Embed Video Section -->
+        <section class="py-20 max-w-4xl mx-auto px-margin border-t border-white/5 text-center scroll-mt-20"
+            id="video-action">
+            <div class="mb-12">
+                <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-3">DEMO WALKTHROUGH
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-3xl font-bold">See It in Action</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-2">Watch how quickly and easily you can
+                    find and clean duplicates in Windows.</p>
+            </div>
+            <div class="glass-panel p-2 rounded-2xl glow-border shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <div class="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/B4YhVzBqgUI"
+                        title="Smart Duplicate Cleaner Pro Demo" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Bento Section -->
+        <section class="py-24 max-w-container-max mx-auto px-margin border-t border-white/5" id="features">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div class="max-w-xl">
+                    <div class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-3">
+                        HIGH-PERFORMANCE ALGORITHMS</div>
+                    <h2 class="font-headline-lg text-headline-lg mb-4 text-3xl font-bold">Robust tools built for
+                        accuracy &amp; speed.</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant text-base">Leveraging digital signatures
+                        instead of guesses. Zero false positives, full user control, and extra storage tools.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+                <!-- Cryptographic Hashing Card -->
+                <div
+                    class="md:col-span-8 group relative overflow-hidden glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300">
+                    <div class="flex flex-col h-full justify-between">
+                        <div>
+                            <div
+                                class="mb-12 w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                                <span class="material-symbols-outlined text-primary text-[36px]">lock_open</span>
+                            </div>
+                            <h3 class="font-headline-md text-headline-md mb-4 text-2xl font-semibold">Precision
+                                Signatures Engine</h3>
+                            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                                Instead of relying on fuzzy matching or unstable layouts, our tool processes unique
+                                signatures directly from content bytes. It detects identical duplicates with absolute
+                                mathematical precision even if they are renamed or moved.
+                            </p>
+                        </div>
+                        <div
+                            class="mt-8 p-5 bg-surface-container-high rounded-lg border border-white/5 flex flex-wrap gap-4 items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-tertiary">verified</span>
+                                <span class="font-label-sm text-label-sm text-on-surface">Byte-Level Validation
+                                    Prevention</span>
+                            </div>
+                            <span class="font-label-sm text-label-sm text-primary font-bold">100% Reliable Match</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speed Card -->
+                <div
+                    class="md:col-span-4 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div
+                            class="mb-8 w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+                            <span class="material-symbols-outlined text-tertiary text-[26px]">speed</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md mb-2 text-2xl font-semibold">Blazing Fast Scanning
+                        </h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            Optimized content matching algorithms designed to find duplicates across thousands of files
+                            in seconds. Speeds scale directly with your drive's capability (SATA/NVMe).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Modern UI Card -->
+                <div
+                    class="md:col-span-4 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div
+                            class="mb-8 w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center border border-secondary/20">
+                            <span class="material-symbols-outlined text-secondary text-[26px]">style</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md mb-2 text-2xl font-semibold">Modern UI</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            A gorgeous, dark-themed native Windows control layout built using the latest
+                            framework. Fluid, responsive, and responsive to system window scales.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Safe Delete Card -->
+                <div
+                    class="md:col-span-8 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300 flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1">
+                        <div
+                            class="mb-6 w-12 h-12 rounded-xl bg-error-container/10 flex items-center justify-center border border-error/20">
+                            <span class="material-symbols-outlined text-error text-[26px]">shield</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md mb-2 text-2xl font-semibold">Safe Delete Logic</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            Our smart preservation rules ensure you always keep at least one original copy of every
+                            file. Customize rules to prefer the file with the oldest created date, shortest path, or
+                            specific folder location.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Review Card -->
+                <div
+                    class="md:col-span-6 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300">
+                    <div
+                        class="mb-6 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                        <span class="material-symbols-outlined text-primary text-[26px]">mouse</span>
+                    </div>
+                    <h3 class="font-headline-md text-headline-md mb-2 text-xl font-bold">Interactive Review</h3>
+                    <ul class="space-y-3 font-body-md text-on-surface-variant">
+                        <li class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-sm">double_arrow</span>
+                            <span>Double-click to preview images/media instantly inside the app.</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-sm">double_arrow</span>
+                            <span>Right-click to jump directly to target folders inside File Explorer.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Flexible Management Card -->
+                <div
+                    class="md:col-span-6 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300">
+                    <div
+                        class="mb-6 w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center border border-secondary/20">
+                        <span class="material-symbols-outlined text-secondary text-[26px]">settings_suggest</span>
+                    </div>
+                    <h3 class="font-headline-md text-headline-md mb-2 text-xl font-bold">Flexible Management</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant mb-4">You decide exactly what happens to
+                        identified duplicates:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span
+                            class="bg-surface-container-high px-3 py-1 rounded border border-white/5 font-label-sm text-xs text-on-surface">Move
+                            to dedicated folder</span>
+                        <span
+                            class="bg-surface-container-high px-3 py-1 rounded border border-white/5 font-label-sm text-xs text-on-surface">Send
+                            to Recycle Bin</span>
+                        <span
+                            class="bg-surface-container-high px-3 py-1 rounded border border-white/5 font-label-sm text-xs text-on-surface">Permanently
+                            delete</span>
+                    </div>
+                </div>
+
+                <!-- Empty Folder Remover Card -->
+                <div
+                    class="md:col-span-12 glass-panel p-10 rounded-xl glow-border spotlight-card transition-all duration-300 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+                                <span class="material-symbols-outlined text-tertiary text-[22px]">folder_off</span>
+                            </div>
+                            <h3 class="font-headline-md text-headline-md text-xl font-bold">Extra Toolbox Utilities</h3>
+                        </div>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-xl">
+                            Clean up the structural mess left behind after moving files. Use the built-in **Empty Folder
+                            Remover** to crawl folders and wipe out abandoned empty directories instantly.
+                        </p>
+                    </div>
+                    <span
+                        class="bg-tertiary/10 border border-tertiary/25 text-tertiary text-xs uppercase font-label-md px-3 py-1.5 rounded-full font-bold">
+                        Included in Toolbox
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Accordion Section -->
+        <section class="py-24 max-w-container-max mx-auto px-margin border-t border-white/5" id="faq">
+            <div class="text-center mb-16">
+                <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-3">COMMON QUESTIONS
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-3xl font-bold">Frequently Asked Questions</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Everything you need to know about
+                    Smart Duplicate Cleaner Pro.</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <!-- FAQ 1 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-white/5 transition-colors faq-item">
+                    <button
+                        class="w-full px-8 py-6 flex justify-between items-center text-left hover:bg-white/[0.02] transition-colors focus:outline-none">
+                        <span class="font-headline-md text-lg font-medium text-on-surface">Is it safe to run on external
+                            drives?</span>
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 faq-icon">expand_more</span>
+                    </button>
+                    <div class="px-8 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer">
+                        Yes. Before performing any file deletion or moving operations, the software generates a detailed
+                        list of duplicates. Safe Delete Logic ensures at least one original copy is kept. You can
+                        preview files by double-clicking and review target files before taking actions like sending them
+                        to the Recycle Bin.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-white/5 transition-colors faq-item">
+                    <button
+                        class="w-full px-8 py-6 flex justify-between items-center text-left hover:bg-white/[0.02] transition-colors focus:outline-none">
+                        <span class="font-headline-md text-lg font-medium text-on-surface">Are my files modified during
+                            analysis?</span>
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 faq-icon">expand_more</span>
+                    </button>
+                    <div class="px-8 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer">
+                        No. The software performs standard read-only operations to calculate file content signatures.
+                        File contents are never changed, uploaded, or modified.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="glass-panel rounded-xl overflow-hidden border border-white/5 transition-colors faq-item">
+                    <button
+                        class="w-full px-8 py-6 flex justify-between items-center text-left hover:bg-white/[0.02] transition-colors focus:outline-none">
+                        <span class="font-headline-md text-lg font-medium text-on-surface">Which OS environments are
+                            supported?</span>
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 faq-icon">expand_more</span>
+                    </button>
+                    <div class="px-8 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer">
+                        Smart Duplicate Cleaner Pro is built specifically as a native Windows desktop client. It fully
+                        supports 64-bit editions of Windows 10 and Windows 11.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="py-24 bg-surface-container-lowest border-y border-white/5" id="pricing">
+            <div class="max-w-container-max mx-auto px-margin">
+                <div class="text-center mb-20">
+                    <div class="font-label-sm text-label-sm text-tertiary uppercase tracking-widest mb-3">PRICING TIERS
+                    </div>
+                    <h2 class="font-headline-lg text-headline-lg text-3xl font-bold mb-4">Simple, transparent pricing.
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">Choose the version that fits your
+                        needs.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                    <!-- Free Trial -->
+                    <div
+                        class="glass-panel p-12 rounded-xl flex flex-col border border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 duration-300">
+                        <div class="mb-8">
+                            <span
+                                class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">Lite</span>
+                            <h3 class="font-headline-md text-2xl font-bold mt-2">Free Trial</h3>
+                        </div>
+                        <div class="mb-10 flex items-baseline gap-1">
+                            <span class="text-[52px] font-bold text-white leading-none">$0</span>
+                            <span class="font-body-md text-on-surface-variant">/ forever</span>
+                        </div>
+                        <ul class="space-y-4 mb-12 flex-1">
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                                <span class="font-body-md text-on-surface">Scan unlimited files</span>
+                            </li>
+                            <li class="flex items-center gap-3 opacity-40">
+                                <span class="material-symbols-outlined text-[20px]">cancel</span>
+                                <span class="font-body-md text-on-surface">Unlimited cleaning processing</span>
+                            </li>
+                            <li class="flex items-center gap-3 opacity-40">
+                                <span class="material-symbols-outlined text-[20px]">cancel</span>
+                                <span class="font-body-md text-on-surface">Persistent application activation</span>
+                            </li>
+                        </ul>
+                        <a class="github-download-btn w-full glass-panel py-4 rounded-lg font-bold text-center hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            href="#">
+                            <span class="material-symbols-outlined text-[20px]">download</span>
+                            Start Free Trial
+                        </a>
+                    </div>
+
+                    <!-- Pro License -->
+                    <div
+                        class="glass-panel p-12 rounded-xl flex flex-col relative border-2 border-primary-container shadow-[0_0_40px_rgba(0,224,255,0.07)] hover:-translate-y-1 duration-300">
+                        <div
+                            class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-sm text-xs font-bold uppercase tracking-widest shadow-lg">
+                            RECOMMENDED
+                        </div>
+                        <div class="mb-8">
+                            <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Full
+                                Version</span>
+                            <h3 class="font-headline-md text-2xl font-bold mt-2">PRO Version</h3>
+                        </div>
+                        <div class="mb-10 flex items-baseline gap-1">
+                            <span class="text-[52px] font-bold text-on-surface leading-none">$20</span>
+                            <span class="font-body-md text-on-surface-variant">/ one-time buy</span>
+                        </div>
+                        <ul class="space-y-4 mb-12 flex-1">
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                                <span class="font-body-md text-on-surface">Persistent activation</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                                <span class="font-body-md text-on-surface">Unlimited file processing &amp;
+                                    deletion</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                                <span class="font-body-md text-on-surface">Perpetual license to this version only</span>
+                            </li>
+                        </ul>
+                        <button
+                            class="buy-license-btn w-full bg-primary-container text-on-primary-container py-4 rounded-lg font-bold hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">chat</span>
+                            Get PRO via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="py-32 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-5 pointer-events-none">
+                <img alt="Focus Background" class="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtkU-OLI7_fPoYEus9Ma956D2uICNPYhGeE_qtRD2SSnGJJGvjz81ASpermxJAAbwGZX93RHnaAXHtJWqP6LmHX88wmU8IfhSnBn4k1psrwqPNC6vN3s02Jky96eEoSFpHurBIX5ofbslqarwAkWMlqI_DoqoIZZAHcbKaAIXxCQu8q68tO9WJGMrVzqX3QcEdoodmNVjMrXcwC3syBOhw2qttYxyg6Xd3Elkwdm3e5SNFriKNI2lt6sjcYx81Gbom950ybXZ-8kyY" />
+            </div>
+            <div class="max-w-container-max mx-auto px-margin text-center relative z-10">
+                <h2 class="font-display-lg text-display-lg text-4xl md:text-5xl mb-6 text-on-surface font-bold">Ready to
+                    clean your drives?</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-xl mx-auto text-lg">Download the
+                    ultimate lightweight hashing duplicate cleaner for Windows desktop.</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <a class="github-download-btn bg-primary-container text-on-primary-container px-12 py-5 rounded-lg font-headline-md text-headline-md font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_35px_rgba(0,224,255,0.2)] flex items-center gap-2"
+                        href="#">
+                        <span class="material-symbols-outlined text-[24px]">download</span>
+                        Download Free Now
+                    </a>
+                </div>
+                <p class="mt-8 font-label-md text-label-md text-on-surface-variant">Compatible with Windows 10/11</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-16 bg-surface-container-lowest border-t border-white/5">
+        <div class="max-w-container-max mx-auto px-margin grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+                <div class="font-headline-md text-headline-md font-bold text-on-surface mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[24px]">delete_sweep</span>
+                    Smart Duplicate Cleaner Pro
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-md">© 2026 Smart Duplicate Cleaner
+                    Pro. Optimized for Windows.</p>
+            </div>
+            <div class="flex flex-wrap gap-8 md:justify-end">
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md"
+                    href="#features">Features</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md"
+                    href="#video-action">Demo</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md"
+                    href="#faq">FAQ</a>
+                <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md"
+                    href="#pricing">Pricing</a>
+                <a class="github-download-btn text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md"
+                    href="#">Download</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // WhatsApp Integration Config
+        const ADMIN_NUMBER = '+923419542835';
+
+        // GitHub API Latest Release download logic
+        const GITHUB_REPO = "abid-2362/download-smart-duplicate-cleaner-pro";
+        const FALLBACK_URL = `https://github.com/abid-2362/download-smart-duplicate-cleaner-pro/archive/refs/heads/main.zip`; // fallback address
+
+        function fetchLatestGitHubRelease() {
+            const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;
+
+            console.log(`Fetching latest release from: ${apiUrl}`);
+
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data && data.tag_name) {
+                        const version = data.tag_name;
+                        console.log(`Latest version found: ${version}`);
+
+                        let downloadUrl = data.zipball_url;
+
+                        if (data.assets && data.assets.length > 0) {
+                            const zipAsset = data.assets.find(asset => asset.name.endsWith('.zip'));
+                            if (zipAsset) {
+                                downloadUrl = zipAsset.browser_download_url;
+                                console.log(`Found explicit ZIP asset: ${downloadUrl}`);
+                            } else {
+                                downloadUrl = data.assets[0].browser_download_url;
+                            }
+                        }
+
+                        updateDownloadButtons(downloadUrl, version);
+                    } else {
+                        useFallback();
+                    }
+                },
+                error: function (err) {
+                    console.warn("GitHub API release fetch failed. Using fallback URL.", err);
+                    useFallback();
+                }
+            });
+        }
+
+        function useFallback() {
+            updateDownloadButtons(FALLBACK_URL, "v1.0.0");
+        }
+
+        function updateDownloadButtons(url, version) {
+            $('.github-download-btn').each(function () {
+                $(this).attr('href', url);
+            });
+            $('.git-ver').text(version);
+            $('#ver-badge-text').text(`${version} Live Now`);
+        }
+
+        $(document).ready(function () {
+            // Init GitHub release fetch
+            fetchLatestGitHubRelease();
+
+            // Reveal Hero items elegantly
+            gsap.to(".hero-content", {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power3.out",
+                delay: 0.2
+            });
+
+            // Scroll indicators
+            $(window).on('scroll', function () {
+                const scrollTop = $(window).scrollTop();
+                const docHeight = $(document).height();
+                const winHeight = $(window).height();
+                const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+
+                // Progress bar
+                $('#scroll-bar').css('width', scrollPercent + '%');
+
+                // Header opacity change on scroll
+                if (scrollTop > 50) {
+                    $('#header-nav').removeClass('bg-surface/75 border-white/5').addClass('bg-surface/90 border-white/10 shadow-lg shadow-black/20');
+                } else {
+                    $('#header-nav').addClass('bg-surface/75 border-white/5').removeClass('bg-surface/90 border-white/10 shadow-lg shadow-black/20');
+                }
+            });
+
+            // Bento card spotlight mouse effect
+            $('.spotlight-card').on('mousemove', function (e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                this.style.setProperty('--mouse-x', `${x}px`);
+                this.style.setProperty('--mouse-y', `${y}px`);
+            });
+
+            // Accordion functionality for FAQs with slide animation
+            $('.faq-item button').on('click', function () {
+                const $item = $(this).closest('.faq-item');
+                const $answer = $item.find('.faq-answer');
+                const $icon = $item.find('.faq-icon');
+
+                // Close other items
+                $('.faq-item').not($item).each(function () {
+                    $(this).find('.faq-answer').slideUp(250);
+                    $(this).find('.faq-icon').removeClass('rotate-180');
+                });
+
+                // Toggle current
+                $answer.slideToggle(250);
+                $icon.toggleClass('rotate-180');
+            });
+
+            // Handle Download click notification feedback
+            $('.github-download-btn').on('click', function (e) {
+                const $toast = $('#toast');
+                const versionText = $('.git-ver').first().text();
+                $('#toast-message').text(`Downloading release ${versionText || 'bundle'} .zip file...`);
+
+                $toast.removeClass('translate-y-12 opacity-0 pointer-events-none').addClass('translate-y-0 opacity-100');
+
+                setTimeout(function () {
+                    $toast.addClass('translate-y-12 opacity-0 pointer-events-none').removeClass('translate-y-0 opacity-100');
+                }, 4000);
+            });
+
+            // buy button triggers WhatsApp chat
+            $('.buy-license-btn').on('click', function (e) {
+                e.preventDefault();
+                // Sanitize admin phone number to digits only
+                const cleanNumber = ADMIN_NUMBER.replace(/[^0-9]/g, '');
+                const message = encodeURIComponent("Hello! I'm interested in purchasing the Smart Duplicate Cleaner Pro license ($20). Can you please guide me on how to purchase?");
+                const whatsappUrl = `https://wa.me/${cleanNumber}?text=${message}`;
+
+                // Open in new window/tab
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+
+        // Particle Animation Canvas logic
+        (function initParticles() {
+            const canvas = document.getElementById('hero-particles');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            const particleCount = 45;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    radius: Math.random() * 2 + 1,
+                    color: Math.random() > 0.5 ? 'rgba(0, 218, 248, 0.4)' : 'rgba(209, 188, 255, 0.4)'
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                particles.forEach((p, idx) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+
+                    // Draw lines between close particles
+                    for (let j = idx + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+    </script>
+</body>
+
+</html>
